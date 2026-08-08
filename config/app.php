@@ -20,8 +20,11 @@ return [
     | Application Version
     |--------------------------------------------------------------------------
     |
-    | These values identify the deployed application build in the Filament
-    | sidebar. Uses in UI only.
+    | These values identify the deployed application build. They are injected at
+    | Docker build time and are read through App\Support\AppVersion.
+    |
+    | They are shown in the Filament sidebar AND returned by the /v1/instance
+    | endpoint.
     |
     */
 

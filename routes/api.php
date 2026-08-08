@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\InstanceController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.v1.')->group(function (): void {
+    Route::get('/instance', InstanceController::class)->name('instance');
+
     Route::post('/auth/login', [AuthController::class, 'login'])
         ->middleware(['throttle:login', 'json.body'])
         ->name('auth.login');

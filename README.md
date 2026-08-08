@@ -57,6 +57,14 @@ Scribe will use `scribe.sqlite` to store temporary data when generating docs. Th
 DB_CONNECTION=sqlite DB_DATABASE=database/scribe.sqlite php artisan migrate
 ```
 
+## Running Tests
+
+Run the full test suite with:
+
+```bash
+composer test
+```
+
 ## Attributions
 
 - App logo/favicons from https://solar-icons.vercel.app/icons?search=wallet&icon=wallet

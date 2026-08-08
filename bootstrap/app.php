@@ -52,6 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     $request->is('api/v1/categories/*') => 'The requested category was not found.',
                     default => 'The requested resource was not found.',
                 }],
+                405 => ['/problems/method-not-allowed', 'Method not allowed', 'The HTTP method is not supported for this endpoint.'],
                 409 => ['/problems/conflict', 'Conflict', 'The category name conflicts with an existing category.'],
                 415 => ['/problems/unsupported-media-type', 'Unsupported media type', 'Request bodies must use application/json.'],
                 422 => ['/problems/validation-failed', 'Validation failed', 'One or more fields are invalid.'],
