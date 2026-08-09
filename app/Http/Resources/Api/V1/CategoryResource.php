@@ -22,6 +22,7 @@ class CategoryResource extends JsonResource
             'id' => $this->getKey(),
             'name' => $this->name,
             'is_active' => $this->is_active,
+            'transactions_count' => (int) $this->whenCounted('transactions', default: 0),
             'created_at' => $this->created_at->toISOString(),
             'updated_at' => $this->updated_at->toISOString(),
             'links' => [

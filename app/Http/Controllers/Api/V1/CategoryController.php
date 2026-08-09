@@ -26,6 +26,7 @@ class CategoryController extends Controller
      * @queryParam page integer The page number. Example: 1
      * @queryParam per_page integer The number of categories per page, from 1 to 100. Defaults to 20. Example: 20
      * @queryParam show_inactive boolean Include inactive categories. Example: true
+     * @queryParam sort string Order the results. Accepts "name" (default), "most_used". Example: most_used
      *
      * @return JsonResponse
      */
@@ -35,11 +36,17 @@ class CategoryController extends Controller
             'page' => ['sometimes', 'integer', 'min:1'],
             'per_page' => ['sometimes', 'integer', 'between:1,100'],
             'show_inactive' => ['sometimes', 'in:true,false,1,0'],
+            'sort' => ['sometimes', 'in:name,most_used'],
         ])->validate();
         $perPage = (int) ($validated['per_page'] ?? 20);
         $paginator = Category::query()
             ->where('user_id', $request->user()->getKey())
             ->when(! $request->boolean('show_inactive'), fn ($query) => $query->where('is_active', true))
+            ->withCount('transactions')
+            ->when(
+                ($validated['sort'] ?? 'name') === 'most_used',
+                fn ($query) => $query->orderByDesc('transactions_count'),
+            )
             ->orderBy('name')
             ->orderBy('id')
             ->paginate($perPage);
@@ -68,7 +75,7 @@ class CategoryController extends Controller
 
         $location = route('api.v1.categories.show', $category);
 
-        return (new CategoryResource($category))->response()->setStatusCode(201)->header('Location', $location);
+        return (new CategoryResource($category->loadCount('transactions')))->response()->setStatusCode(201)->header('Location', $location);
     }
 
     /**
@@ -98,7 +105,7 @@ class CategoryController extends Controller
 
         $model->update($validated);
 
-        return new CategoryResource($model->refresh());
+        return new CategoryResource($model->refresh()->loadCount('transactions'));
     }
 
     /**
@@ -113,7 +120,7 @@ class CategoryController extends Controller
 
     private function find(Request $request, string $id): Category
     {
-        return Category::where('user_id', $request->user()->getKey())->findOrFail($id);
+        return Category::where('user_id', $request->user()->getKey())->withCount('transactions')->findOrFail($id);
     }
 
     private function validateWrite(Request $request, bool $updating = false): array

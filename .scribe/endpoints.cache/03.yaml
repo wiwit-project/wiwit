@@ -37,7 +37,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id":1,"name":"Morgan Hirthe","email":"dare.emelie@example.com","profile_photo_url":null,"email_verified_at":"2026-08-08T02:13:26.000000Z","created_at":"2026-08-08T02:13:26.000000Z","updated_at":"2026-08-08T02:13:26.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/profile","method":"GET"}}}'
+        content: '{"id":1,"name":"Morgan Hirthe","email":"dare.emelie@example.com","profile_photo_url":null,"email_verified_at":"2026-08-09T06:47:52.000000Z","created_at":"2026-08-09T06:47:52.000000Z","updated_at":"2026-08-09T06:47:52.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/profile","method":"GET"}}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
