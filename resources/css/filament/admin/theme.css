@@ -3,3 +3,12 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 @source '../../../../vendor/jeffgreco13/filament-breezy/resources/**/*';
+
+/* Needed to make the widgets in admin dashboard have the same height between its siblings */
+.fi-wi-chart-canvas-ctn-no-aspect-ratio {
+    @apply h-72;
+}
+
+.fi-wi-widget > .fi-section {
+    @apply h-full;
+}
