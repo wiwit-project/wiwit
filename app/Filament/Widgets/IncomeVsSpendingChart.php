@@ -45,20 +45,6 @@ class IncomeVsSpendingChart extends ChartWidget
                     'backgroundColor' => self::EXPENSE_COLOR,
                     'borderRadius' => 3,
                 ],
-                [
-                    'type' => 'line',
-                    'label' => 'Net',
-                    'data' => $income->map(
-                        fn (float $total, string $month): float => $total - $expense->get($month, 0.0),
-                    )->values()->all(),
-                    'borderColor' => '#64748b',
-                    'backgroundColor' => '#64748b',
-                    'borderWidth' => 2,
-                    'tension' => 0.35,
-                    'pointRadius' => 0,
-                    'pointHoverRadius' => 4,
-                    'fill' => false,
-                ],
             ],
             // A 12 month window visits each month exactly once, so the short name is unambiguous.
             'labels' => $income->keys()
@@ -86,13 +72,7 @@ class IncomeVsSpendingChart extends ChartWidget
             'maintainAspectRatio' => false,
             'plugins' => [
                 'legend' => [
-                    'position' => 'top',
-                    'align' => 'start',
-                    'labels' => [
-                        'boxWidth' => 12,
-                        'usePointStyle' => true,
-                        'pointStyle' => 'circle',
-                    ],
+                    'display' => false,
                 ],
             ],
             'scales' => [
