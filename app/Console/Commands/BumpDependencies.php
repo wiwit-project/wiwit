@@ -24,10 +24,7 @@ class BumpDependencies extends Command
             return self::FAILURE;
         }
 
-        $result = Process::path(base_path())
-            ->run('composer bump', fn (string $type, string $output) => $this->output->write($output));
-
-        if ($result->failed()) {
+        if (! $this->runComposer('bump')) {
             $this->components->error('Composer bump failed, constraints were left untouched.');
 
             return self::FAILURE;
@@ -37,7 +34,22 @@ class BumpDependencies extends Command
 
         $this->components->info("Trimmed {$trimmed} constraint(s) down to major.minor.");
 
+        // refresh the content hash.
+        if (! $this->runComposer('update --lock')) {
+            $this->components->error('Unable to refresh composer.lock.');
+
+            return self::FAILURE;
+        }
+
         return self::SUCCESS;
+    }
+
+    private function runComposer(string $command): bool
+    {
+        return Process::path(base_path())
+            ->forever()
+            ->run("composer {$command}", fn (string $type, string $output) => $this->output->write($output))
+            ->successful();
     }
 
     /**
