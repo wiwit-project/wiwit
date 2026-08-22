@@ -48,7 +48,7 @@ class TransactionController extends Controller
         $paginator = Transaction::query()
             ->where('user_id', $request->user()->getKey())
             ->with('category')
-            ->when(isset($validated['type']), fn ($query) => $query->where('type', $validated['type']))
+            ->when(isset($validated['type']), fn ($query) => $query->ofType(TransactionType::from($validated['type'])))
             ->when(isset($validated['category_id']), fn ($query) => $query->where('category_id', $validated['category_id']))
             ->when(isset($validated['date_from']), fn ($query) => $query->whereDate('transaction_date', '>=', $validated['date_from']))
             ->when(isset($validated['date_to']), fn ($query) => $query->whereDate('transaction_date', '<=', $validated['date_to']))

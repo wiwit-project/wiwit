@@ -43,7 +43,7 @@ trait InteractsWithTransactions
                 [TransactionType::Income->value],
             );
         } else {
-            $query->where('type', $type)->selectRaw('transaction_date, sum(amount) as total');
+            $query->ofType($type)->selectRaw('transaction_date, sum(amount) as total');
         }
 
         return $query
@@ -62,7 +62,7 @@ trait InteractsWithTransactions
     protected function categoryTotals(TransactionType $type, CarbonInterface $from, CarbonInterface $to): Collection
     {
         return $this->transactionsQuery()
-            ->where('transactions.type', $type)
+            ->ofType($type)
             ->whereBetween('transactions.transaction_date', [$from, $to])
             ->leftJoin('categories', 'categories.id', '=', 'transactions.category_id')
             ->selectRaw("coalesce(categories.name, 'Uncategorized') as category_name, sum(transactions.amount) as total")
