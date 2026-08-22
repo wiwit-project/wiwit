@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\TransactionResource;
 use App\Models\Transaction;
@@ -38,7 +39,7 @@ class TransactionController extends Controller
         $validated = validator($request->query(), [
             'page' => ['sometimes', 'integer', 'min:1'],
             'per_page' => ['sometimes', 'integer', 'between:1,100'],
-            'type' => ['sometimes', Rule::in(['income', 'expense'])],
+            'type' => ['sometimes', Rule::enum(TransactionType::class)],
             'category_id' => ['sometimes', 'integer', Rule::exists('categories', 'id')->where('user_id', $request->user()->getKey())],
             'date_from' => ['sometimes', 'date_format:Y-m-d'],
             'date_to' => ['sometimes', 'date_format:Y-m-d', 'after_or_equal:date_from'],
@@ -130,7 +131,7 @@ class TransactionController extends Controller
 
         return $request->validate([
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'type' => [$required, Rule::in(['income', 'expense'])],
+            'type' => [$required, Rule::enum(TransactionType::class)],
             'amount' => [$required, 'numeric', 'min:0', 'decimal:0,2', 'max:9999999999999.99'],
             'category_id' => ['sometimes', 'nullable', 'integer', Rule::exists('categories', 'id')->where(fn ($query) => $query
                 ->where('user_id', $request->user()->getKey())

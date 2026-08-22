@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Filament\Widgets\ChartWidget;
 
@@ -25,11 +26,11 @@ class TopCategoriesComparisonChart extends ChartWidget
     protected function getData(): array
     {
         $thisMonth = $this
-            ->categoryTotals('expense', today()->startOfMonth(), today()->endOfMonth())
+            ->categoryTotals(TransactionType::Expense, today()->startOfMonth(), today()->endOfMonth())
             ->take(self::VISIBLE_CATEGORIES);
 
         $lastMonth = $this->categoryTotals(
-            'expense',
+            TransactionType::Expense,
             today()->subMonthNoOverflow()->startOfMonth(),
             today()->subMonthNoOverflow()->endOfMonth(),
         );

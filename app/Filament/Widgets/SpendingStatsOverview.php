@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -35,7 +36,7 @@ class SpendingStatsOverview extends BaseWidget
             Stat::make('Today\'s Net Cash Flow', $this->formatMoney($todayNet))
                 ->description('Average daily spending this month: '.$this->formatUnsignedMoney(
                     $this->transactionsQuery()
-                        ->where('type', 'expense')
+                        ->where('type', TransactionType::Expense)
                         ->whereBetween('transaction_date', [$monthStart, $monthEnd])
                         ->sum('amount') / $today->day,
                 ))
@@ -110,8 +111,8 @@ class SpendingStatsOverview extends BaseWidget
     {
         $query = $scope($this->transactionsQuery());
 
-        return (float) $query->clone()->where('type', 'income')->sum('amount')
-            - (float) $query->clone()->where('type', 'expense')->sum('amount');
+        return (float) $query->clone()->where('type', TransactionType::Income)->sum('amount')
+            - (float) $query->clone()->where('type', TransactionType::Expense)->sum('amount');
     }
 
     private function colorFor(float $amount): string

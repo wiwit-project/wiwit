@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,10 +21,17 @@ class Transaction extends Model
         'transaction_date',
     ];
 
-    protected $casts = [
-        'amount' => 'decimal:2',
-        'transaction_date' => 'date',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type' => TransactionType::class,
+            'amount' => 'decimal:2',
+            'transaction_date' => 'date',
+        ];
+    }
 
     public function user()
     {

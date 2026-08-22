@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Carbon\CarbonInterface;
 use Filament\Widgets\ChartWidget;
@@ -28,8 +29,8 @@ class IncomeVsSpendingChart extends ChartWidget
         $end = today()->endOfMonth();
         $start = today()->startOfMonth()->subMonths(self::MONTHS - 1);
 
-        $income = $this->monthlyTotals('income', $start, $end);
-        $expense = $this->monthlyTotals('expense', $start, $end);
+        $income = $this->monthlyTotals(TransactionType::Income, $start, $end);
+        $expense = $this->monthlyTotals(TransactionType::Expense, $start, $end);
 
         return [
             'datasets' => [
@@ -56,7 +57,7 @@ class IncomeVsSpendingChart extends ChartWidget
     /**
      * @return Collection<string, float>
      */
-    private function monthlyTotals(string $type, CarbonInterface $start, CarbonInterface $end): Collection
+    private function monthlyTotals(TransactionType $type, CarbonInterface $start, CarbonInterface $end): Collection
     {
         return $this->bucketByMonth($this->dailyTotals($type, $start, $end), $start, $end);
     }

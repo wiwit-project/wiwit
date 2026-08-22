@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\TransactionType;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,15 +16,20 @@ class TransactionFactory extends Factory
 {
     public function definition(): array
     {
-        $type = fake()->randomElement(['expense', 'expense', 'expense', 'income']);
+        $type = fake()->randomElement([
+            TransactionType::Expense,
+            TransactionType::Expense,
+            TransactionType::Expense,
+            TransactionType::Income,
+        ]);
 
         return [
             'user_id' => User::factory(),
-            'title' => fake()->randomElement($type === 'income'
+            'title' => fake()->randomElement($type === TransactionType::Income
                 ? ['Salary', 'Freelance Payment', 'Bonus', 'Refund']
                 : ['Lunch', 'Groceries', 'Petrol', 'Utilities', 'Lepak', 'Coffee', 'Badminton']),
             'type' => $type,
-            'amount' => fake()->randomFloat(2, $type === 'income' ? 500 : 5, $type === 'income' ? 5000 : 300),
+            'amount' => fake()->randomFloat(2, $type === TransactionType::Income ? 500 : 5, $type === TransactionType::Income ? 5000 : 300),
             'category_id' => null,
             'notes' => fake()->optional(0.25)->sentence(),
             'transaction_date' => fake()->dateTimeBetween(now()->startOfMonth(), now()),
@@ -34,7 +40,7 @@ class TransactionFactory extends Factory
     {
         return $this->state(fn () => [
             'title' => fake()->randomElement(['Salary', 'Freelance Payment', 'Bonus', 'Refund']),
-            'type' => 'income',
+            'type' => TransactionType::Income,
             'amount' => fake()->randomFloat(2, 500, 5000),
         ]);
     }
@@ -43,7 +49,7 @@ class TransactionFactory extends Factory
     {
         return $this->state(fn () => [
             'title' => fake()->randomElement(['Lunch', 'Groceries', 'Petrol', 'Utilities', 'Lepak', 'Coffee', 'Badminton']),
-            'type' => 'expense',
+            'type' => TransactionType::Expense,
             'amount' => fake()->randomFloat(2, 5, 300),
         ]);
     }

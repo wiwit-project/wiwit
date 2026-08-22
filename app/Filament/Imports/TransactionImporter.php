@@ -2,6 +2,7 @@
 
 namespace App\Filament\Imports;
 
+use App\Enums\TransactionType;
 use App\Models\Category;
 use App\Models\Transaction;
 use Filament\Actions\Imports\ImportColumn;
@@ -60,7 +61,7 @@ class TransactionImporter extends Importer
     {
         $amount = (float) $this->data['amount'];
 
-        $this->record->type = $amount > 0 ? 'income' : 'expense';
+        $this->record->type = $amount > 0 ? TransactionType::Income : TransactionType::Expense;
         $this->data['amount'] = number_format(abs($amount), 2, '.', '');
     }
 

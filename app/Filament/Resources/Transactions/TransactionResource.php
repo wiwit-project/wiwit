@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Transactions;
 
+use App\Enums\TransactionType;
 use App\Filament\Imports\TransactionImporter;
 use App\Filament\Resources\Transactions\Pages\ManageTransactions;
 use App\Models\Category;
@@ -52,11 +53,8 @@ class TransactionResource extends Resource
                 TextInput::make('title')
                     ->maxLength(255),
                 Select::make('type')
-                    ->options([
-                        'expense' => 'Expense',
-                        'income' => 'Income',
-                    ])
-                    ->default('expense')
+                    ->options(TransactionType::class)
+                    ->default(TransactionType::Expense)
                     ->required(),
                 TextInput::make('amount')
                     ->required()
@@ -114,8 +112,8 @@ class TransactionResource extends Resource
                     ->searchable()
                     ->weight(fn (Transaction $record): string => $record->transaction_date->isToday() ? 'bold' : 'normal'),
                 TextColumn::make('amount')
-                    ->formatStateUsing(fn ($state, Transaction $record): string => ($record->type === 'income' ? '+' : '-').number_format((float) $state, 2, '.', ''))
-                    ->color(fn (Transaction $record): string => $record->type === 'income' ? 'success' : 'danger')
+                    ->formatStateUsing(fn ($state, Transaction $record): string => ($record->type === TransactionType::Income ? '+' : '-').number_format((float) $state, 2, '.', ''))
+                    ->color(fn (Transaction $record): string => $record->type === TransactionType::Income ? 'success' : 'danger')
                     ->sortable()
                     ->weight(fn (Transaction $record): string => $record->transaction_date->isToday() ? 'bold' : 'normal'),
                 TextColumn::make('transaction_date')

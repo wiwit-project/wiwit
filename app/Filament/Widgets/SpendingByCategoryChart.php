@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Filament\Widgets\ChartWidget;
 
@@ -26,7 +27,7 @@ class SpendingByCategoryChart extends ChartWidget
 
     protected function getData(): array
     {
-        $totals = $this->categoryTotals('expense', today()->startOfMonth(), today()->endOfMonth());
+        $totals = $this->categoryTotals(TransactionType::Expense, today()->startOfMonth(), today()->endOfMonth());
 
         if ($totals->count() > self::VISIBLE_CATEGORIES) {
             $others = (float) $totals->slice(self::VISIBLE_CATEGORIES)->sum();

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Carbon\CarbonInterface;
 use Filament\Widgets\ChartWidget;
@@ -62,7 +63,7 @@ class CumulativeSpendChart extends ChartWidget
     private function cumulativeSpend(CarbonInterface $month, int $days, int $upTo): array
     {
         $start = $month->copy()->startOfMonth();
-        $totals = $this->dailyTotals('expense', $start, $month->copy()->endOfMonth());
+        $totals = $this->dailyTotals(TransactionType::Expense, $start, $month->copy()->endOfMonth());
 
         $running = 0.0;
         $series = [];

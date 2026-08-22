@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\TransactionType;
 use App\Filament\Widgets\Concerns\InteractsWithTransactions;
 use Filament\Widgets\Widget;
 
@@ -19,7 +20,7 @@ class SpendingHeatmap extends Widget
     {
         $monthStart = today()->startOfMonth();
         $daysInMonth = $monthStart->daysInMonth;
-        $totals = $this->dailyTotals('expense', $monthStart, today()->endOfMonth());
+        $totals = $this->dailyTotals(TransactionType::Expense, $monthStart, today()->endOfMonth());
         $max = (float) $totals->max();
 
         // Offset of the 1st within its week to make the grid lines up like a calendar.

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets\Concerns;
 
+use App\Enums\TransactionType;
 use App\Models\Transaction;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,13 +32,16 @@ trait InteractsWithTransactions
         return Transaction::query()->where('transactions.user_id', auth()->id());
     }
 
-    protected function dailyTotals(?string $type, CarbonInterface $from, CarbonInterface $to): Collection
+    protected function dailyTotals(?TransactionType $type, CarbonInterface $from, CarbonInterface $to): Collection
     {
         $query = $this->transactionsQuery()
             ->whereBetween('transaction_date', [$from, $to]);
 
         if ($type === null) {
-            $query->selectRaw("transaction_date, sum(case when type = 'income' then amount else -amount end) as total");
+            $query->selectRaw(
+                'transaction_date, sum(case when type = ? then amount else -amount end) as total',
+                [TransactionType::Income->value],
+            );
         } else {
             $query->where('type', $type)->selectRaw('transaction_date, sum(amount) as total');
         }
@@ -55,7 +59,7 @@ trait InteractsWithTransactions
      *
      * @return Collection<string, float>
      */
-    protected function categoryTotals(string $type, CarbonInterface $from, CarbonInterface $to): Collection
+    protected function categoryTotals(TransactionType $type, CarbonInterface $from, CarbonInterface $to): Collection
     {
         return $this->transactionsQuery()
             ->where('transactions.type', $type)
@@ -75,7 +79,10 @@ trait InteractsWithTransactions
     {
         return (float) $this->transactionsQuery()
             ->whereDate('transaction_date', '<', $date)
-            ->selectRaw("coalesce(sum(case when type = 'income' then amount else -amount end), 0) as total")
+            ->selectRaw(
+                'coalesce(sum(case when type = ? then amount else -amount end), 0) as total',
+                [TransactionType::Income->value],
+            )
             ->value('total');
     }
 
