@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TransactionType;
 use App\Filament\Imports\TransactionImporter;
 use App\Filament\Resources\Categories\CategoryResource;
 use App\Filament\Resources\Debts\DebtResource;
@@ -25,7 +26,7 @@ it('scopes finance resources to the current user', function () {
         'user_id' => $user->id,
         'category_id' => $ownCategory->id,
         'title' => 'Lunch',
-        'type' => 'expense',
+        'type' => TransactionType::Expense,
         'amount' => 12.30,
         'transaction_date' => today(),
     ]);
@@ -33,7 +34,7 @@ it('scopes finance resources to the current user', function () {
         'user_id' => $otherUser->id,
         'category_id' => $otherCategory->id,
         'title' => 'Flight',
-        'type' => 'expense',
+        'type' => TransactionType::Expense,
         'amount' => 67.80,
         'transaction_date' => today(),
     ]);
@@ -87,9 +88,9 @@ it('imports categories per user and allows cents', function () {
     $category = $expense->category;
 
     expect($expense->amount)->toBe('12.30')
-        ->and($expense->type)->toBe('expense')
+        ->and($expense->type)->toBe(TransactionType::Expense)
         ->and($income->amount)->toBe('12.30')
-        ->and($income->type)->toBe('income')
+        ->and($income->type)->toBe(TransactionType::Income)
         ->and($category->user_id)->toBe($user->id)
         ->and($category->id)->not->toBe($otherCategory->id);
 });
@@ -100,14 +101,14 @@ it('shows transaction amounts with type direction', function () {
     Transaction::create([
         'user_id' => $user->id,
         'title' => 'Lunch',
-        'type' => 'expense',
+        'type' => TransactionType::Expense,
         'amount' => 12.30,
         'transaction_date' => today(),
     ]);
     Transaction::create([
         'user_id' => $user->id,
         'title' => 'Paycheck',
-        'type' => 'income',
+        'type' => TransactionType::Income,
         'amount' => 12.30,
         'transaction_date' => today(),
     ]);

@@ -42,6 +42,7 @@ it('creates updates lists and deletes owned transactions', function () {
         'transaction_date' => '2026-07-11',
     ])->assertCreated()
         ->assertHeader('Location', 'http://127.0.0.1:8000/api/v1/transactions/1')
+        ->assertJsonPath('type', 'expense')
         ->assertJsonPath('amount', '12.30')
         ->assertJsonPath('category.name', 'Food');
     $transactionId = $response->json('id');
@@ -52,6 +53,7 @@ it('creates updates lists and deletes owned transactions', function () {
 
     $this->getJson('/api/v1/transactions?type=expense&per_page=1')
         ->assertJsonPath('meta.per_page', 1)
+        ->assertJsonPath('data.0.type', 'expense')
         ->assertJsonPath('links.self.href', 'http://127.0.0.1:8000/api/v1/transactions?type=expense&per_page=1&page=1');
 
     $this->deleteJson("/api/v1/transactions/{$transactionId}")->assertNoContent();
@@ -80,6 +82,9 @@ it('validates transaction filters and writes as problem details', function () {
         ->assertUnprocessable()
         ->assertJsonPath('type', '/problems/validation-failed')
         ->assertJsonStructure(['errors' => ['per_page']]);
+    $this->getJson('/api/v1/transactions?type=savings')
+        ->assertUnprocessable()
+        ->assertJsonStructure(['errors' => ['type']]);
     $this->postJson('/api/v1/transactions', ['amount' => '1.234'])
         ->assertUnprocessable()
         ->assertHeader('Content-Type', 'application/problem+json');
