@@ -21,7 +21,6 @@ Route::prefix('v1')->name('api.v1.')->group(function (): void {
         Route::patch('/transactions/{transaction}', [TransactionController::class, 'update'])->middleware(['abilities:update', 'json.body'])->name('transactions.update');
         Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->middleware('abilities:delete')->name('transactions.destroy');
 
-        Route::get('/analytics/summary', [AnalyticsController::class, 'summary'])->middleware('abilities:view')->name('analytics.summary');
         Route::get('/analytics/series', [AnalyticsController::class, 'series'])->middleware('abilities:view')->name('analytics.series');
         Route::get('/analytics/categories', [AnalyticsController::class, 'categories'])->middleware('abilities:view')->name('analytics.categories');
         Route::get('/analytics/overview', [AnalyticsController::class, 'overview'])->middleware('abilities:view')->name('analytics.overview');

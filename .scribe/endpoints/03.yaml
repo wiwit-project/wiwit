@@ -7,208 +7,6 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: api/v1/analytics/summary
-    metadata:
-      custom: []
-      groupName: Analytics
-      groupDescription: |-
-
-        Raw spending aggregates over a supplied date range
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Transactions summary'
-      description: 'Totals, balances and the daily average expense for a given period of time.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_SANCTUM_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      date_from:
-        custom: []
-        name: date_from
-        description: 'Start of the period, inclusive, in YYYY-MM-DD format.'
-        required: true
-        example: '2026-08-01'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-      date_to:
-        custom: []
-        name: date_to
-        description: 'End of the period, inclusive, in YYYY-MM-DD format. Must not be before date_from. The period must not exceed 366 days.'
-        required: true
-        example: '2026-08-31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanQueryParameters:
-      date_from: '2026-08-01'
-      date_to: '2026-08-31'
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: '{"period":{"from":"2026-08-01","to":"2026-08-31"},"income":0,"expense":213.67,"net":-213.67,"transaction_count":1,"opening_balance":0,"closing_balance":-213.67,"daily_average_expense":6.89,"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/summary?date_from=2026-08-01&date_to=2026-08-31","method":"GET"},"series":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/series?date_from=2026-08-01&date_to=2026-08-31","method":"GET"},"categories":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/categories?date_from=2026-08-01&date_to=2026-08-31&type=expense","method":"GET"}}}'
-        headers:
-          cache-control: 'max-age=60, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-    responseFields:
-      period.from:
-        custom: []
-        name: period.from
-        description: 'Start of the period, echoed back.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      period.to:
-        custom: []
-        name: period.to
-        description: 'End of the period, echoed back.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      income:
-        custom: []
-        name: income
-        description: 'Sum of income amounts in the period.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      expense:
-        custom: []
-        name: expense
-        description: 'Sum of expense amounts in the period.'
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      net:
-        custom: []
-        name: net
-        description: 'Income minus expense.'
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      transaction_count:
-        custom: []
-        name: transaction_count
-        description: 'Number of transactions in the period.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      opening_balance:
-        custom: []
-        name: opening_balance
-        description: 'Net of every transaction dated strictly before date_from.'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      closing_balance:
-        custom: []
-        name: closing_balance
-        description: "Opening balance plus the period's net."
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      daily_average_expense:
-        custom: []
-        name: daily_average_expense
-        description: 'Expense divided by the number of days in the period.'
-        required: false
-        example: null
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      links.self:
-        custom: []
-        name: links.self
-        description: 'Link back to this summary.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      links.series:
-        custom: []
-        name: links.series
-        description: 'Link to the series for the same period.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      links.categories:
-        custom: []
-        name: links.categories
-        description: 'Link to the expense categories for the same period.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
     uri: api/v1/analytics/series
     metadata:
       custom: []
@@ -276,7 +74,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"period":{"from":"2026-01-01","to":"2026-08-31"},"interval":"month","meta":{"opening_balance":0},"data":[{"period":"2026-01","period_start":"2026-01-01","period_end":"2026-01-31","income":0,"expense":0,"net":0},{"period":"2026-02","period_start":"2026-02-01","period_end":"2026-02-28","income":0,"expense":0,"net":0},{"period":"2026-03","period_start":"2026-03-01","period_end":"2026-03-31","income":0,"expense":0,"net":0},{"period":"2026-04","period_start":"2026-04-01","period_end":"2026-04-30","income":0,"expense":0,"net":0},{"period":"2026-05","period_start":"2026-05-01","period_end":"2026-05-31","income":0,"expense":0,"net":0},{"period":"2026-06","period_start":"2026-06-01","period_end":"2026-06-30","income":0,"expense":0,"net":0},{"period":"2026-07","period_start":"2026-07-01","period_end":"2026-07-31","income":0,"expense":0,"net":0},{"period":"2026-08","period_start":"2026-08-01","period_end":"2026-08-31","income":0,"expense":260.55,"net":-260.55}],"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/series?date_from=2026-01-01&date_to=2026-08-31&interval=month","method":"GET"},"summary":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/summary?date_from=2026-01-01&date_to=2026-08-31","method":"GET"}}}'
+        content: '{"period":{"from":"2026-01-01","to":"2026-08-31"},"interval":"month","meta":{"opening_balance":0},"data":[{"period":"2026-01","period_start":"2026-01-01","period_end":"2026-01-31","income":0,"expense":0,"net":0},{"period":"2026-02","period_start":"2026-02-01","period_end":"2026-02-28","income":0,"expense":0,"net":0},{"period":"2026-03","period_start":"2026-03-01","period_end":"2026-03-31","income":0,"expense":0,"net":0},{"period":"2026-04","period_start":"2026-04-01","period_end":"2026-04-30","income":0,"expense":0,"net":0},{"period":"2026-05","period_start":"2026-05-01","period_end":"2026-05-31","income":0,"expense":0,"net":0},{"period":"2026-06","period_start":"2026-06-01","period_end":"2026-06-30","income":0,"expense":0,"net":0},{"period":"2026-07","period_start":"2026-07-01","period_end":"2026-07-31","income":0,"expense":0,"net":0},{"period":"2026-08","period_start":"2026-08-01","period_end":"2026-08-31","income":0,"expense":126.81,"net":-126.81}],"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/series?date_from=2026-01-01&date_to=2026-08-31&interval=month","method":"GET"}}}'
         headers:
           cache-control: 'max-age=60, private'
           content-type: application/json
@@ -404,17 +202,6 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      links.summary:
-        custom: []
-        name: links.summary
-        description: 'Link to the summary for the same period.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
     auth:
       - headers
       - Authorization
@@ -504,7 +291,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"period":{"from":"2026-08-01","to":"2026-08-31"},"type":"expense","meta":{"total":292.41,"category_count":1},"data":[{"category_id":1,"category_name":"Food","total":292.41,"share":1}],"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/categories?date_from=2026-08-01&date_to=2026-08-31&type=expense&limit=5","method":"GET"},"summary":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/summary?date_from=2026-08-01&date_to=2026-08-31","method":"GET"}}}'
+        content: '{"period":{"from":"2026-08-01","to":"2026-08-31"},"type":"expense","meta":{"total":260.55,"category_count":1},"data":[{"category_id":1,"category_name":"Food","total":260.55,"share":1}],"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/categories?date_from=2026-08-01&date_to=2026-08-31&type=expense&limit=5","method":"GET"}}}'
         headers:
           cache-control: 'max-age=60, private'
           content-type: application/json
@@ -621,17 +408,6 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      links.summary:
-        custom: []
-        name: links.summary
-        description: 'Link to the summary for the same period.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
     auth:
       - headers
       - Authorization
@@ -683,7 +459,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"period":{"from":"2026-08-01","to":"2026-08-31"},"month":"2026-08","summary":{"period":{"from":"2026-08-01","to":"2026-08-31"},"income":0,"expense":237.33,"net":-237.33,"transaction_count":1,"opening_balance":0,"closing_balance":-237.33,"daily_average_expense":7.66},"series":{"period":{"from":"2025-09-01","to":"2026-08-31"},"interval":"month","meta":{"opening_balance":0},"data":[{"period":"2025-09","period_start":"2025-09-01","period_end":"2025-09-30","income":0,"expense":0,"net":0},{"period":"2025-10","period_start":"2025-10-01","period_end":"2025-10-31","income":0,"expense":0,"net":0},{"period":"2025-11","period_start":"2025-11-01","period_end":"2025-11-30","income":0,"expense":0,"net":0},{"period":"2025-12","period_start":"2025-12-01","period_end":"2025-12-31","income":0,"expense":0,"net":0},{"period":"2026-01","period_start":"2026-01-01","period_end":"2026-01-31","income":0,"expense":0,"net":0},{"period":"2026-02","period_start":"2026-02-01","period_end":"2026-02-28","income":0,"expense":0,"net":0},{"period":"2026-03","period_start":"2026-03-01","period_end":"2026-03-31","income":0,"expense":0,"net":0},{"period":"2026-04","period_start":"2026-04-01","period_end":"2026-04-30","income":0,"expense":0,"net":0},{"period":"2026-05","period_start":"2026-05-01","period_end":"2026-05-31","income":0,"expense":0,"net":0},{"period":"2026-06","period_start":"2026-06-01","period_end":"2026-06-30","income":0,"expense":0,"net":0},{"period":"2026-07","period_start":"2026-07-01","period_end":"2026-07-31","income":0,"expense":0,"net":0},{"period":"2026-08","period_start":"2026-08-01","period_end":"2026-08-31","income":0,"expense":237.33,"net":-237.33}]},"categories":{"period":{"from":"2026-08-01","to":"2026-08-31"},"type":"expense","meta":{"total":237.33,"category_count":1},"data":[{"category_id":1,"category_name":"Food","total":237.33,"share":1}]},"previous_categories":{"period":{"from":"2026-07-01","to":"2026-07-31"},"type":"expense","meta":{"total":0,"category_count":0},"data":[]},"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/overview?month=2026-08","method":"GET"},"summary":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/summary?date_from=2026-08-01&date_to=2026-08-31","method":"GET"},"series":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/series?date_from=2025-09-01&date_to=2026-08-31&interval=month","method":"GET"},"categories":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/categories?date_from=2026-08-01&date_to=2026-08-31&type=expense","method":"GET"}}}'
+        content: '{"period":{"from":"2026-08-01","to":"2026-08-31"},"month":"2026-08","summary":{"period":{"from":"2026-08-01","to":"2026-08-31"},"income":0,"expense":292.41,"net":-292.41,"transaction_count":1,"opening_balance":0,"closing_balance":-292.41,"daily_average_expense":9.43},"series":{"period":{"from":"2025-09-01","to":"2026-08-31"},"interval":"month","meta":{"opening_balance":0},"data":[{"period":"2025-09","period_start":"2025-09-01","period_end":"2025-09-30","income":0,"expense":0,"net":0},{"period":"2025-10","period_start":"2025-10-01","period_end":"2025-10-31","income":0,"expense":0,"net":0},{"period":"2025-11","period_start":"2025-11-01","period_end":"2025-11-30","income":0,"expense":0,"net":0},{"period":"2025-12","period_start":"2025-12-01","period_end":"2025-12-31","income":0,"expense":0,"net":0},{"period":"2026-01","period_start":"2026-01-01","period_end":"2026-01-31","income":0,"expense":0,"net":0},{"period":"2026-02","period_start":"2026-02-01","period_end":"2026-02-28","income":0,"expense":0,"net":0},{"period":"2026-03","period_start":"2026-03-01","period_end":"2026-03-31","income":0,"expense":0,"net":0},{"period":"2026-04","period_start":"2026-04-01","period_end":"2026-04-30","income":0,"expense":0,"net":0},{"period":"2026-05","period_start":"2026-05-01","period_end":"2026-05-31","income":0,"expense":0,"net":0},{"period":"2026-06","period_start":"2026-06-01","period_end":"2026-06-30","income":0,"expense":0,"net":0},{"period":"2026-07","period_start":"2026-07-01","period_end":"2026-07-31","income":0,"expense":0,"net":0},{"period":"2026-08","period_start":"2026-08-01","period_end":"2026-08-31","income":0,"expense":292.41,"net":-292.41}]},"categories":{"period":{"from":"2026-08-01","to":"2026-08-31"},"type":"expense","meta":{"total":292.41,"category_count":1},"data":[{"category_id":1,"category_name":"Food","total":292.41,"share":1}]},"previous_categories":{"period":{"from":"2026-07-01","to":"2026-07-31"},"type":"expense","meta":{"total":0,"category_count":0},"data":[]},"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/overview?month=2026-08","method":"GET"},"series":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/series?date_from=2025-09-01&date_to=2026-08-31&interval=month","method":"GET"},"categories":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/analytics\/categories?date_from=2026-08-01&date_to=2026-08-31&type=expense","method":"GET"}}}'
         headers:
           cache-control: 'max-age=60, private'
           content-type: application/json
@@ -726,7 +502,7 @@ endpoints:
       summary:
         custom: []
         name: summary
-        description: 'Totals for the reported month, as in GET /analytics/summary.'
+        description: 'Totals for the reported month.'
         required: false
         example: null
         type: object
@@ -771,17 +547,6 @@ endpoints:
         custom: []
         name: links.self
         description: 'Link back to this overview.'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      links.summary:
-        custom: []
-        name: links.summary
-        description: 'Link to the summary for the reported month.'
         required: false
         example: null
         type: ''

@@ -13,7 +13,6 @@ use Laravel\Sanctum\Sanctum;
 function analyticsEndpoints(): array
 {
     return [
-        '/api/v1/analytics/summary?date_from=2026-07-01&date_to=2026-07-31',
         '/api/v1/analytics/series?date_from=2026-07-01&date_to=2026-07-31',
         '/api/v1/analytics/categories?date_from=2026-07-01&date_to=2026-07-31&type=expense',
         '/api/v1/analytics/overview?month=2026-07',
@@ -86,12 +85,6 @@ it('never leaks another user analytics', function () {
 
     Sanctum::actingAs($user, ['view']);
 
-    $this->getJson('/api/v1/analytics/summary?date_from=2026-07-01&date_to=2026-07-31')
-        ->assertOk()
-        ->assertJsonPath('income', 3000)
-        ->assertJsonPath('expense', 300.75)
-        ->assertJsonPath('opening_balance', 600);
-
     $this->getJson('/api/v1/analytics/series?date_from=2026-07-01&date_to=2026-07-31&interval=month')
         ->assertOk()
         ->assertJsonPath('data.0.income', 3000)
@@ -107,40 +100,6 @@ it('never leaks another user analytics', function () {
 
     expect($overview->json('summary.expense'))->toBe(300.75)
         ->and($overview->json('categories.meta.total'))->toBe(300.75);
-});
-
-/*
- * Money is emitted as a JSON number, so whole amounts arrive as 3000 rather than
- * 3000.0. The assertions below pin the literal wire values.
- */
-it('reports exact totals balances and averages for a period', function () {
-    $user = User::factory()->create();
-    analyticsFixture($user);
-    Sanctum::actingAs($user, ['view']);
-
-    $this->getJson('/api/v1/analytics/summary?date_from=2026-07-01&date_to=2026-07-31')
-        ->assertOk()
-        ->assertJsonPath('period.from', '2026-07-01')
-        ->assertJsonPath('period.to', '2026-07-31')
-        ->assertJsonPath('income', 3000)
-        ->assertJsonPath('expense', 300.75)
-        ->assertJsonPath('net', 2699.25)
-        ->assertJsonPath('transaction_count', 3)
-        ->assertJsonPath('opening_balance', 600)
-        ->assertJsonPath('closing_balance', 3299.25)
-        ->assertJsonPath('daily_average_expense', 9.7)
-        ->assertJsonPath('links.self.href', 'http://127.0.0.1:8000/api/v1/analytics/summary?date_from=2026-07-01&date_to=2026-07-31')
-        ->assertJsonPath('links.series.href', 'http://127.0.0.1:8000/api/v1/analytics/series?date_from=2026-07-01&date_to=2026-07-31')
-        ->assertJsonPath('links.categories.href', 'http://127.0.0.1:8000/api/v1/analytics/categories?date_from=2026-07-01&date_to=2026-07-31&type=expense');
-
-    // A period with no transactions at all still answers with zeros, not nulls.
-    $this->getJson('/api/v1/analytics/summary?date_from=2026-09-01&date_to=2026-09-30')
-        ->assertOk()
-        ->assertJsonPath('income', 0)
-        ->assertJsonPath('expense', 0)
-        ->assertJsonPath('transaction_count', 0)
-        ->assertJsonPath('opening_balance', 3749.25)
-        ->assertJsonPath('daily_average_expense', 0);
 });
 
 it('zero fills every series bucket in range', function () {
@@ -309,10 +268,6 @@ it('rejects malformed analytics query parameters', function () {
     Sanctum::actingAs($user, ['view']);
 
     $cases = [
-        ['/api/v1/analytics/summary', ['date_from', 'date_to']],
-        ['/api/v1/analytics/summary?date_from=2026-7-1&date_to=2026-07-31', ['date_from']],
-        ['/api/v1/analytics/summary?date_from=2026-07-31&date_to=2026-07-01', ['date_to']],
-        ['/api/v1/analytics/summary?date_from=2026-01-01&date_to=2027-01-02', ['date_to']], // 367 days
         ['/api/v1/analytics/series?date_from=2026-07-01&date_to=2026-07-31&interval=fortnight', ['interval']],
         ['/api/v1/analytics/categories?date_from=2026-07-01&date_to=2026-07-31', ['type']],
         ['/api/v1/analytics/categories?date_from=2026-07-01&date_to=2026-07-31&type=savings', ['type']],
@@ -328,7 +283,4 @@ it('rejects malformed analytics query parameters', function () {
             ->assertJsonStructure(['errors' => $fields]);
     }
 
-    // Exactly one year, the longest period the guard allows.
-    $this->getJson('/api/v1/analytics/summary?date_from=2026-01-01&date_to=2027-01-01')
-        ->assertOk();
 });

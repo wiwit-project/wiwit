@@ -31,45 +31,6 @@ class AnalyticsController extends Controller
     public function __construct(private readonly TransactionAnalytics $analytics) {}
 
     /**
-     * Transactions summary
-     *
-     * Totals, balances and the daily average expense for a given period of time.
-     *
-     * @queryParam date_from string required Start of the period, inclusive, in YYYY-MM-DD format. Example: 2026-08-01
-     * @queryParam date_to string required End of the period, inclusive, in YYYY-MM-DD format. Must not be before date_from. The period must not exceed 366 days. Example: 2026-08-31
-     *
-     * @responseField period.from Start of the period, echoed back.
-     * @responseField period.to End of the period, echoed back.
-     * @responseField income Sum of income amounts in the period.
-     * @responseField expense Sum of expense amounts in the period.
-     * @responseField net Income minus expense.
-     * @responseField transaction_count Number of transactions in the period.
-     * @responseField opening_balance Net of every transaction dated strictly before date_from.
-     * @responseField closing_balance Opening balance plus the period's net.
-     * @responseField daily_average_expense Expense divided by the number of days in the period.
-     * @responseField links.self Link back to this summary.
-     * @responseField links.series Link to the series for the same period.
-     * @responseField links.categories Link to the expense categories for the same period.
-     */
-    public function summary(Request $request): JsonResponse
-    {
-        $validated = validator($request->query(), $this->rangeRules())->validate();
-        $period = $this->rangeFrom($validated);
-
-        return $this->respond([
-            ...$this->summaryPayload($request->user(), $period),
-            'links' => [
-                'self' => $this->link('api.v1.analytics.summary', $period->toQuery()),
-                'series' => $this->link('api.v1.analytics.series', $period->toQuery()),
-                'categories' => $this->link('api.v1.analytics.categories', [
-                    ...$period->toQuery(),
-                    'type' => TransactionType::Expense->value,
-                ]),
-            ],
-        ]);
-    }
-
-    /**
      * Sum transactions by time series
      *
      * History of income/expenses in a time series for a given period of time.
@@ -89,7 +50,6 @@ class AnalyticsController extends Controller
      * @responseField data[].expense Sum of expense amounts in the bucket.
      * @responseField data[].net Bucket income minus bucket expense.
      * @responseField links.self Link back to this series.
-     * @responseField links.summary Link to the summary for the same period.
      */
     public function series(Request $request): JsonResponse
     {
@@ -105,7 +65,6 @@ class AnalyticsController extends Controller
             ...$this->seriesPayload($request->user(), $period, $interval),
             'links' => [
                 'self' => $this->link('api.v1.analytics.series', [...$period->toQuery(), 'interval' => $interval->value]),
-                'summary' => $this->link('api.v1.analytics.summary', $period->toQuery()),
             ],
         ]);
     }
@@ -130,7 +89,6 @@ class AnalyticsController extends Controller
      * @responseField data[].total Sum of amounts for this category.
      * @responseField data[].share This category's fraction of meta.total, from 0 to 1.
      * @responseField links.self Link back to this breakdown.
-     * @responseField links.summary Link to the summary for the same period.
      */
     public function categories(Request $request): JsonResponse
     {
@@ -152,7 +110,6 @@ class AnalyticsController extends Controller
                     'type' => $type->value,
                     'limit' => $limit,
                 ], fn ($value): bool => $value !== null)),
-                'summary' => $this->link('api.v1.analytics.summary', $period->toQuery()),
             ],
         ]);
     }
@@ -167,12 +124,11 @@ class AnalyticsController extends Controller
      * @responseField period.from First day of the reported month.
      * @responseField period.to Last day of the reported month.
      * @responseField month The reported month, in YYYY-MM format.
-     * @responseField summary Totals for the reported month, as in GET /analytics/summary.
+     * @responseField summary Totals for the reported month.
      * @responseField series Trailing twelve months at interval=month, as in GET /analytics/series.
      * @responseField categories Expense breakdown for the reported month, as in GET /analytics/categories.
      * @responseField previous_categories Expense breakdown for the month before, for period-over-period comparison.
      * @responseField links.self Link back to this overview.
-     * @responseField links.summary Link to the summary for the reported month.
      * @responseField links.series Link to the trailing twelve-month series.
      * @responseField links.categories Link to the expense categories for the reported month.
      */
@@ -197,7 +153,6 @@ class AnalyticsController extends Controller
             'previous_categories' => $this->categoriesPayload($user, $period->previousMonth(), $type),
             'links' => [
                 'self' => $this->link('api.v1.analytics.overview', ['month' => $month]),
-                'summary' => $this->link('api.v1.analytics.summary', $period->toQuery()),
                 'series' => $this->link('api.v1.analytics.series', [...$trailing->toQuery(), 'interval' => Interval::Month->value]),
                 'categories' => $this->link('api.v1.analytics.categories', [...$period->toQuery(), 'type' => $type->value]),
             ],
