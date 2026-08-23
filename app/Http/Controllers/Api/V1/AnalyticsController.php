@@ -115,11 +115,11 @@ class AnalyticsController extends Controller
     }
 
     /**
-     * Get all analytics data
+     * Get analytics overview
      *
-     * Return all the individual analytics data
+     * Return all aggregated analytics data
      *
-     * @queryParam month string The month to report on, in YYYY-MM format. Defaults to the current server month. Example: 2026-08
+     * @queryParam month string The month, in YYYY-MM format. Defaults to the current month. Example: 2026-08
      *
      * @responseField period.from First day of the reported month.
      * @responseField period.to Last day of the reported month.
@@ -127,7 +127,6 @@ class AnalyticsController extends Controller
      * @responseField summary Totals for the reported month.
      * @responseField series Trailing twelve months at interval=month, as in GET /analytics/series.
      * @responseField categories Expense breakdown for the reported month, as in GET /analytics/categories.
-     * @responseField previous_categories Expense breakdown for the month before, for period-over-period comparison.
      * @responseField links.self Link back to this overview.
      * @responseField links.series Link to the trailing twelve-month series.
      * @responseField links.categories Link to the expense categories for the reported month.
@@ -150,7 +149,6 @@ class AnalyticsController extends Controller
             'summary' => $this->summaryPayload($user, $period),
             'series' => $this->seriesPayload($user, $trailing, Interval::Month),
             'categories' => $this->categoriesPayload($user, $period, $type),
-            'previous_categories' => $this->categoriesPayload($user, $period->previousMonth(), $type),
             'links' => [
                 'self' => $this->link('api.v1.analytics.overview', ['month' => $month]),
                 'series' => $this->link('api.v1.analytics.series', [...$trailing->toQuery(), 'interval' => Interval::Month->value]),

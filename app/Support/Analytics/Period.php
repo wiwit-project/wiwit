@@ -50,14 +50,6 @@ class Period
     }
 
     /**
-     * Period covering the calendar month immediately before this one.
-     */
-    public function previousMonth(): self
-    {
-        return self::forMonth($this->from->startOfMonth()->subMonth()->format(self::MONTH_FORMAT));
-    }
-
-    /**
      * Number of days in the period (inclusive)
      */
     public function days(): int

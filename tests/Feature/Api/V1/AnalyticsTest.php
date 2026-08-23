@@ -7,9 +7,6 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 use Laravel\Sanctum\Sanctum;
 
-/**
- * Every analytics endpoint, with the query string that makes it valid.
- */
 function analyticsEndpoints(): array
 {
     return [
@@ -213,7 +210,8 @@ it('bundles a whole dashboard into the overview', function () {
 
     $this->getJson('/api/v1/analytics/overview?month=2026-08')
         ->assertOk()
-        ->assertJsonStructure(['summary', 'series', 'categories', 'previous_categories', 'links'])
+        ->assertJsonStructure(['summary', 'series', 'categories', 'links'])
+        ->assertJsonMissingPath('previous_categories')
         ->assertJsonPath('month', '2026-08')
         ->assertJsonPath('period.from', '2026-08-01')
         ->assertJsonPath('period.to', '2026-08-31')
@@ -227,11 +225,6 @@ it('bundles a whole dashboard into the overview', function () {
         ->assertJsonPath('categories.period.from', '2026-08-01')
         ->assertJsonPath('categories.meta.total', 75)
         ->assertJsonPath('categories.data.0.category_name', 'Uncategorized')
-        ->assertJsonPath('previous_categories.period.from', '2026-07-01')
-        ->assertJsonPath('previous_categories.period.to', '2026-07-31')
-        ->assertJsonPath('previous_categories.meta.total', 375.75)
-        ->assertJsonPath('previous_categories.data.0.category_name', 'Uncategorized')
-        ->assertJsonPath('previous_categories.data.1.category_name', 'Rent')
         ->assertJsonPath('links.self.href', 'http://127.0.0.1:8000/api/v1/analytics/overview?month=2026-08');
 
     // Without a month it falls back to the current server month.
@@ -248,8 +241,6 @@ it('resolves the overview month independently of the server clock', function () 
 
     Sanctum::actingAs($user, ['view']);
 
-    // On a 31st, a naive "Y-m" parse fills the missing day from today and overflows a short
-    // month into the next one, which also collapses previous_categories onto the same month.
     $this->travelTo(CarbonImmutable::parse('2026-03-31'));
 
     $this->getJson('/api/v1/analytics/overview?month=2026-02')
@@ -257,10 +248,7 @@ it('resolves the overview month independently of the server clock', function () 
         ->assertJsonPath('period.from', '2026-02-01')
         ->assertJsonPath('period.to', '2026-02-28')
         ->assertJsonPath('summary.expense', 10)
-        ->assertJsonPath('categories.meta.total', 10)
-        ->assertJsonPath('previous_categories.period.from', '2026-01-01')
-        ->assertJsonPath('previous_categories.period.to', '2026-01-31')
-        ->assertJsonPath('previous_categories.meta.total', 20);
+        ->assertJsonPath('categories.meta.total', 10);
 });
 
 it('rejects malformed analytics query parameters', function () {
