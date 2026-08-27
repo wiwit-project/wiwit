@@ -38,6 +38,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | User Registration
+    |--------------------------------------------------------------------------
+    |
+    | When set to true, self-registration is open to any number of users.
+    | When false (the default), registration is only available to create
+    | the first user only.
+    |
+    */
+
+    'enable_registration' => (bool) env('ENABLE_REGISTRATION', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
