@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('dashboard')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
+            ->registration()
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): string => view('partials.shared-head')->render(),
