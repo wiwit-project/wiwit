@@ -3,14 +3,25 @@
 namespace App\Support;
 
 use App\Models\User;
+use Illuminate\Database\QueryException;
 
 /**
- * Controls whether self-registration is currently available.
+ * The Registration control class.
  */
 class Registration
 {
     public static function enabled(): bool
     {
-        return config('app.enable_registration') || User::count() === 0;
+        if (config('app.enable_registration')) {
+            return true;
+        }
+
+        // Database may not exist yet (e.g. during `artisan migrate`), so ignore
+        // query exception and let the command finish
+        try {
+            return User::count() === 0;
+        } catch (QueryException) {
+            return false;
+        }
     }
 }
