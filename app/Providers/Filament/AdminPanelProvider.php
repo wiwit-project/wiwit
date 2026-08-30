@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Support\Registration;
+use Filament\Auth\Pages\Register;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -29,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('dashboard')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
+            ->registration(Registration::enabled() ? Register::class : null)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): string => view('partials.shared-head')->render(),

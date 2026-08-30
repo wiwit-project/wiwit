@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 @use('App\Support\AppVersion')
+@use('App\Support\Registration')
 
 @php
     $configuredName = config('app.name');
@@ -13,6 +14,8 @@
 
     // Scribe only registers its route once the docs have been generated.
     $docsUrl = Route::has('scribe') ? route('scribe') : null;
+
+    $canRegister = Route::has('filament.admin.auth.register') && Registration::enabled();
 @endphp
 
 <head>
@@ -44,6 +47,12 @@
                         Dashboard
                     </a>
                 @else
+                    @if ($canRegister)
+                        <a href="{{ route('filament.admin.auth.register') }}"
+                            class="inline-block px-5 py-1.5 border-[#19140035] hover:border-[#1915014a] border dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                            Register
+                        </a>
+                    @endif
                     <a href="{{ route('filament.admin.auth.login') }}"
                         class="inline-block px-5 py-1.5 border-[#19140035] hover:border-[#1915014a] border dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
                         Log in
@@ -61,7 +70,8 @@
                 <h1 class="mb-1 text-lg font-medium">Welcome to {{ $instanceName }}</h1>
                 <p class="mb-4 text-[#706f6c] dark:text-[#A1A09A]">
                     Your self-hosted <span class="font-medium text-[#1b1b18] dark:text-[#EDEDEC]">Wiwit</span>
-                    instance; a finance tracker built for speed and convenience. Sign in to pick up where you left off.
+                    instance; a finance tracker built for speed and convenience.
+                    {{ $canRegister ? 'Create your account to get started.' : 'Sign in to pick up where you left off.' }}
                 </p>
 
                 <ul class="flex flex-col mb-4 lg:mb-6">
@@ -104,19 +114,30 @@
                 </ul>
 
                 <ul class="flex flex-wrap gap-3 text-sm leading-normal">
-                    <li>
-                        @auth
+                    @auth
+                        <li>
                             <a href="{{ route('filament.admin.pages.dashboard') }}"
                                 class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
                                 Open dashboard
                             </a>
+                        </li>
+                    @else
+                        @if ($canRegister)
+                            <li>
+                                <a href="{{ route('filament.admin.auth.register') }}"
+                                    class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
+                                    Get Started
+                                </a>
+                            </li>
                         @else
-                            <a href="{{ route('filament.admin.auth.login') }}"
-                                class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
-                                Log in
-                            </a>
-                        @endauth
-                    </li>
+                            <li>
+                                <a href="{{ route('filament.admin.auth.login') }}"
+                                    class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
+                                    Log in
+                                </a>
+                            </li>
+                        @endif
+                    @endauth
                     @if (filled($docsUrl))
                         <li>
                             <a href="{{ $docsUrl }}"
