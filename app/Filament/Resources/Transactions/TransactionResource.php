@@ -105,6 +105,7 @@ class TransactionResource extends Resource
     {
         return $table
             ->recordTitleAttribute('title')
+            ->defaultPaginationPageOption(25)
             ->columns([
                 TextColumn::make('title')
                     ->wrap()
