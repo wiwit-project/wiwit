@@ -26,7 +26,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -142,7 +142,15 @@ class TransactionResource extends Resource
             ])
             ->defaultSort('transaction_date', 'desc')
             ->filters([
-                TrashedFilter::make(),
+                SelectFilter::make('category')
+                    ->relationship('category', 'name')
+                    ->preload()
+                    ->searchable(),
+                SelectFilter::make('type')
+                    ->options([
+                        'expense' => 'Expenses',
+                        'income' => 'Income',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),
