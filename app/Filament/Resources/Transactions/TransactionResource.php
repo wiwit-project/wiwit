@@ -129,6 +129,7 @@ class TransactionResource extends Resource
                     ->wrap()
                     ->limit(20)
                     ->weight(fn (Transaction $record): string => $record->transaction_date->isToday() ? 'bold' : 'normal')
+                    ->searchable()
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->dateTime()
