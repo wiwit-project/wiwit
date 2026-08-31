@@ -26,6 +26,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -151,7 +152,24 @@ class TransactionResource extends Resource
                         'expense' => 'Expenses',
                         'income' => 'Income',
                     ]),
+                Filter::make('created_at')
+                    ->schema([
+                        DatePicker::make('transaction_from'),
+                        DatePicker::make('transaction_until')->default(now()),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['transaction_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('transaction_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['transaction_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('transaction_date', '<=', $date),
+                            );
+                    }),
             ])
+            ->filtersFormColumns(3)
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
