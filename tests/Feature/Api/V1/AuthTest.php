@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 it('logs in and issues a full ability bearer token', function () {
     $user = User::factory()->create([
@@ -44,4 +45,36 @@ it('returns generic credentials errors and throttles login attempts', function (
         'device_name' => 'Test',
     ])->assertTooManyRequests()
         ->assertJsonPath('type', '/problems/too-many-requests');
+});
+
+it('logs out by revoking only the current device bearer token', function () {
+    $user = User::factory()->create();
+    $currentDeviceToken = $user->createToken('Current device', []);
+    $otherDeviceToken = $user->createToken('Other device', ['view']);
+
+    $this->withToken($currentDeviceToken->plainTextToken)
+        ->postJson('/api/v1/auth/logout')
+        ->assertNoContent();
+
+    $this->assertModelMissing($currentDeviceToken->accessToken);
+    $this->assertModelExists($otherDeviceToken->accessToken);
+
+    Auth::forgetGuards();
+
+    $this->withToken($currentDeviceToken->plainTextToken)
+        ->getJson('/api/v1/profile')
+        ->assertUnauthorized()
+        ->assertHeader('Content-Type', 'application/problem+json')
+        ->assertJsonPath('type', '/problems/unauthenticated');
+
+    $this->withToken($otherDeviceToken->plainTextToken)
+        ->getJson('/api/v1/profile')
+        ->assertOk();
+});
+
+it('requires a bearer token to log out', function () {
+    $this->postJson('/api/v1/auth/logout')
+        ->assertUnauthorized()
+        ->assertHeader('Content-Type', 'application/problem+json')
+        ->assertJsonPath('type', '/problems/unauthenticated');
 });

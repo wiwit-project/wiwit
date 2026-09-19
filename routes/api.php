@@ -15,6 +15,8 @@ Route::prefix('v1')->name('api.v1.')->group(function (): void {
         ->middleware(['throttle:login', 'json.body'])
         ->name('auth.login');
     Route::middleware('auth:sanctum')->group(function (): void {
+        Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
         Route::get('/transactions', [TransactionController::class, 'index'])->middleware('abilities:view')->name('transactions.index');
         Route::post('/transactions', [TransactionController::class, 'store'])->middleware(['abilities:create', 'json.body'])->name('transactions.store');
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->middleware('abilities:view')->name('transactions.show');

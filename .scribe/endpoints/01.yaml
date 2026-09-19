@@ -1,7 +1,7 @@
 name: Authentication
 description: |-
 
-  Authenticate the API
+  Manage authentication for the API.
 endpoints:
   -
     custom: []
@@ -13,7 +13,7 @@ endpoints:
       groupName: Authentication
       groupDescription: |-
 
-        Authenticate the API
+        Manage authentication for the API.
       subgroup: ''
       subgroupDescription: ''
       title: 'Get Token'
@@ -69,6 +69,43 @@ endpoints:
     responses: []
     responseFields: []
     auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/auth/logout
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        Manage authentication for the API.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Revoke Current Access Token'
+      description: 'Revoke the bearer token used by the current device.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_SANCTUM_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

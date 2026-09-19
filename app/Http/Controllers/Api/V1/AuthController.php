@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
 /**
  * @group Authentication
  *
- * Authenticate the API
+ * Manage authentication for the API.
  *
  * @unauthenticated
  */
@@ -49,6 +50,20 @@ class AuthController extends Controller
         $user = User::where('email', $email)->firstOrFail();
 
         return $this->tokenResponse($user, $validated['device_name']);
+    }
+
+    /**
+     * Revoke Current Access Token
+     *
+     * Revoke the bearer token used by the current device.
+     *
+     * @authenticated
+     */
+    public function logout(Request $request): Response
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->noContent();
     }
 
     private function tokenResponse(User $user, string $deviceName)
