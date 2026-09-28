@@ -15,7 +15,7 @@ class CumulativeSpendChart extends ChartWidget
 
     protected ?string $description = 'This month vs last';
 
-    protected static ?int $sort = 22;
+    protected static ?int $sort = 11;
 
     protected ?string $maxHeight = '18rem';
 

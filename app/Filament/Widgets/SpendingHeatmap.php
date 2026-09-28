@@ -14,7 +14,7 @@ class SpendingHeatmap extends Widget
 
     protected static ?int $sort = 30;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = ['default' => 'full', 'lg' => 8];
 
     public function getGrid(): array
     {

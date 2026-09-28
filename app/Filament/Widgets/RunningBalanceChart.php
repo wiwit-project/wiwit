@@ -13,7 +13,7 @@ class RunningBalanceChart extends ChartWidget
 
     protected ?string $description = 'Cumulative net since your first transaction';
 
-    protected static ?int $sort = 11;
+    protected static ?int $sort = 31;
 
     protected ?string $maxHeight = '18rem';
 

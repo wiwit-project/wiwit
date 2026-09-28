@@ -13,43 +13,44 @@
 
 <x-filament-widgets::widget>
     <x-filament::section heading="When you spend" description="This month">
-        <div class="overflow-x-auto">
-            <div class="min-w-md space-y-1">
-                <div class="grid gap-1 text-xs text-gray-500 dark:text-gray-400"
-                    style="grid-template-columns: 3rem repeat({{ $weeks }}, minmax(0, 1fr));">
-                    <div></div>
+        <div class="w-full max-w-4xl space-y-0.5 sm:space-y-1">
+            <div class="grid gap-0.5 text-[0.6875rem] text-gray-500 sm:gap-1 sm:text-xs dark:text-gray-400"
+                style="grid-template-columns: 2rem repeat({{ $weeks }}, minmax(0, 1fr));">
+                <div></div>
 
-                    @for ($week = 1; $week <= $weeks; $week++)
-                        <div class="text-center">Week {{ $week }}</div>
-                    @endfor
-                </div>
-
-                @foreach ($rows as $row)
-                    <div class="grid items-center gap-1"
-                        style="grid-template-columns: 3rem repeat({{ $weeks }}, minmax(0, 1fr));">
-                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ $row['label'] }}
-                        </div>
-
-                        @foreach ($row['cells'] as $cell)
-                            @if ($cell === null)
-                                <div class="h-8 rounded-md bg-transparent"></div>
-                            @else
-                                <div class="h-8 rounded-md {{ $shade($cell['level']) }}"
-                                    title="{{ $row['label'] }} {{ $cell['day'] }} — {{ number_format($cell['total'], 2, '.', '') }}">
-                                </div>
-                            @endif
-                        @endforeach
+                @for ($week = 1; $week <= $weeks; $week++)
+                    <div class="text-center">
+                        <span class="sm:hidden">W{{ $week }}</span>
+                        <span class="hidden sm:inline">Week {{ $week }}</span>
                     </div>
-                @endforeach
+                @endfor
+            </div>
 
-                <div class="flex items-center justify-end gap-2 pt-2 text-xs text-gray-500 dark:text-gray-400">
-                    <span>Less</span>
-                    @foreach ([0, 1, 2, 3, 4] as $level)
-                        <span class="h-3 w-3 rounded-sm {{ $shade($level) }}"></span>
+            @foreach ($rows as $row)
+                <div class="grid items-center gap-0.5 sm:gap-1"
+                    style="grid-template-columns: 2rem repeat({{ $weeks }}, minmax(0, 1fr));">
+                    <div class="text-[0.6875rem] text-gray-500 sm:text-xs dark:text-gray-400">
+                        {{ $row['label'] }}
+                    </div>
+
+                    @foreach ($row['cells'] as $cell)
+                        @if ($cell === null)
+                            <div class="h-6 rounded-sm bg-transparent sm:h-7 sm:rounded-md"></div>
+                        @else
+                            <div class="h-6 rounded-sm sm:h-7 sm:rounded-md {{ $shade($cell['level']) }}"
+                                title="{{ $row['label'] }} {{ $cell['day'] }} - {{ number_format($cell['total'], 2, '.', '') }}">
+                            </div>
+                        @endif
                     @endforeach
-                    <span>More</span>
                 </div>
+            @endforeach
+
+            <div class="flex items-center justify-end gap-2 pt-2 text-xs text-gray-500 dark:text-gray-400">
+                <span>Less</span>
+                @foreach ([0, 1, 2, 3, 4] as $level)
+                    <span class="h-3 w-3 rounded-sm {{ $shade($level) }}"></span>
+                @endforeach
+                <span>More</span>
             </div>
         </div>
     </x-filament::section>

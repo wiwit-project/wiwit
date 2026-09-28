@@ -18,7 +18,7 @@ class TopCategoriesComparisonChart extends ChartWidget
 
     protected int|string|array $columnSpan = [
         'default' => 'full',
-        'lg' => 4,
+        'lg' => 8,
     ];
 
     private const VISIBLE_CATEGORIES = 6;
