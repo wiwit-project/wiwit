@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Support\Registration;
+use Filament\Actions\Action;
 use Filament\Auth\Pages\Register;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -55,6 +56,22 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Management',
                 'Settings',
+            ])
+            // add custom user menu items. https://filamentphp.com/docs/5.x/navigation/user-menu
+            ->userMenuItems([
+                [
+                    Action::make('api-documentation')
+                        ->label('API Documentation')
+                        ->url(fn (): string => route('scribe'))
+                        ->icon('heroicon-o-code-bracket-square'),
+                    Action::make('documentation')
+                        ->label('Product Documentation')
+                        ->url('https://docs.wiwit.iqfareez.com')
+                        ->icon('heroicon-o-book-open'),
+                ],
+                [
+                    // intentionally left empty to seperate item above with Sign out item below
+                ],
             ])
             ->plugins([
                 BreezyCore::make()
