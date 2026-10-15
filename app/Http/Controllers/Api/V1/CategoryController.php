@@ -59,6 +59,7 @@ class CategoryController extends Controller
      * Add new category
      *
      * @bodyParam name string required The category name. Maximum 255 characters. Example: Food
+     * @bodyParam description string Optional category description. Maximum 255 characters. Example: Everyday expenses
      * @bodyParam is_active boolean Whether the category is active. Defaults to true. Example: true
      */
     #[ResponseFromApiResource(CategoryResource::class, Category::class, status: 201)]
@@ -91,6 +92,7 @@ class CategoryController extends Controller
      * Update a specified Category
      *
      * @bodyParam name string The category name. Maximum 255 characters. Example: Food & Groceries
+     * @bodyParam description string Optional category description. Maximum 255 characters. Use null to clear it. Example: Everyday expenses
      * @bodyParam is_active boolean Whether the category is active. Example: false
      */
     #[ResponseFromApiResource(CategoryResource::class, Category::class)]
@@ -127,6 +129,7 @@ class CategoryController extends Controller
     {
         return $request->validate([
             'name' => [$updating ? 'sometimes' : 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
     }

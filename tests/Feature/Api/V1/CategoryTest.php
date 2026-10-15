@@ -12,19 +12,96 @@ it('creates updates and lists owned categories', function () {
     $response = $this->postJson('/api/v1/categories', ['name' => 'Food'])
         ->assertCreated()
         ->assertHeader('Location', 'http://127.0.0.1:8000/api/v1/categories/1')
+        ->assertJsonPath('description', null)
         ->assertJsonPath('is_active', true)
         ->assertJsonPath('transactions_count', 0);
 
     $this->patchJson("/api/v1/categories/{$response->json('id')}", ['is_active' => false])
         ->assertOk()
+        ->assertJsonPath('description', null)
         ->assertJsonPath('is_active', false)
         ->assertJsonPath('transactions_count', 0);
 
     $this->getJson('/api/v1/categories')->assertJsonCount(0, 'data');
     $this->getJson('/api/v1/categories?show_inactive=1')
         ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.description', null)
         ->assertJsonPath('data.0.transactions_count', 0);
 });
+
+it('returns category descriptions in detail and collection responses', function (?string $description) {
+    $user = User::factory()->create();
+    $category = Category::factory()->create([
+        'user_id' => $user->id,
+        'description' => $description,
+    ]);
+    Sanctum::actingAs($user, ['view']);
+
+    $this->getJson("/api/v1/categories/{$category->id}")
+        ->assertOk()
+        ->assertJsonPath('description', $description);
+
+    $this->getJson('/api/v1/categories')
+        ->assertOk()
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.description', $description);
+})->with(['Everyday expenses', null]);
+
+it('creates categories with optional descriptions', function (?string $description) {
+    $user = User::factory()->create();
+    Sanctum::actingAs($user, ['create']);
+
+    $response = $this->postJson('/api/v1/categories', [
+        'name' => 'Food',
+        'description' => $description,
+    ])->assertCreated()->assertJsonPath('description', $description);
+
+    expect(Category::findOrFail($response->json('id'))->description)->toBe($description);
+})->with(['Everyday expenses', str_repeat('a', 255), null]);
+
+it('updates preserves and clears category descriptions', function () {
+    $user = User::factory()->create();
+    $category = Category::factory()->create([
+        'user_id' => $user->id,
+        'description' => 'Original description',
+    ]);
+    Sanctum::actingAs($user, ['update']);
+    $url = "/api/v1/categories/{$category->id}";
+
+    $this->patchJson($url, ['name' => 'Food'])
+        ->assertOk()->assertJsonPath('description', 'Original description');
+    expect($category->fresh()->description)->toBe('Original description');
+
+    $this->patchJson($url, ['description' => str_repeat('a', 255)])
+        ->assertOk()->assertJsonPath('description', str_repeat('a', 255));
+    expect($category->fresh()->description)->toBe(str_repeat('a', 255));
+
+    $this->patchJson($url, ['description' => null])
+        ->assertOk()->assertJsonPath('description', null);
+    expect($category->fresh()->description)->toBeNull();
+});
+
+it('rejects invalid category descriptions on create and update', function (mixed $description) {
+    $user = User::factory()->create();
+    $category = Category::factory()->create([
+        'user_id' => $user->id,
+        'description' => 'Original description',
+    ]);
+    Sanctum::actingAs($user, ['create', 'update']);
+
+    $this->postJson('/api/v1/categories', ['name' => 'Food', 'description' => $description])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('description');
+    expect(Category::where('user_id', $user->id)->count())->toBe(1);
+
+    $this->patchJson("/api/v1/categories/{$category->id}", ['description' => $description])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('description');
+    expect($category->fresh()->description)->toBe('Original description');
+})->with([
+    'too long' => [str_repeat('a', 256)],
+    'array' => [['invalid']],
+]);
 
 it('ranks categories by transaction usage', function () {
     $user = User::factory()->create();

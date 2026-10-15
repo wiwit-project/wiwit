@@ -16,6 +16,7 @@ class CategoryFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => fake()->word(),
+            'description' => fake()->sentence(),
             'is_active' => true,
         ];
     }

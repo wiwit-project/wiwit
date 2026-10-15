@@ -50,6 +50,8 @@ class CategoryResource extends Resource
                         modifyQueryUsing: fn (Builder $query): Builder => $query->where('user_id', auth()->id()),
                     )
                     ->required(),
+                TextInput::make('description')
+                    ->maxLength(255),
             ]);
     }
 
@@ -59,6 +61,8 @@ class CategoryResource extends Resource
             ->recordTitleAttribute('Category')
             ->columns([
                 TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('description')
                     ->searchable(),
                 ToggleColumn::make('is_active')
                     ->label('Active')
