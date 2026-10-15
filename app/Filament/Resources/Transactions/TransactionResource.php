@@ -75,7 +75,12 @@ class TransactionResource extends Resource
                         'name',
                         modifyQueryUsing: fn (Builder $query): Builder => $query
                             ->where('user_id', auth()->id())
-                            ->where('is_active', true),
+                            ->where('is_active', true)
+                            ->withCount([
+                                'transactions' => fn (Builder $query): Builder => $query->where('user_id', auth()->id()),
+                            ])
+                            ->orderByDesc('transactions_count')
+                            ->orderBy('name'),
                     )
                     ->searchable()
                     ->preload()
