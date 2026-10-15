@@ -47,7 +47,12 @@ class AppServiceProvider extends ServiceProvider
                 $token = $user->createToken('scribe_temporary', $abilities);
                 $request->headers->add(['Authorization' => "Bearer {$token->plainTextToken}"]);
 
-                $category = Category::create(['user_id' => $user->id, 'name' => 'Food', 'is_active' => true]);
+                $category = Category::create([
+                    'user_id' => $user->id,
+                    'name' => 'Food',
+                    'description' => 'Everyday expenses',
+                    'is_active' => true,
+                ]);
                 Transaction::factory()->expense()->for($user)->for($category)->create();
             });
         }
