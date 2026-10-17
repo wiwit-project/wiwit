@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 [
                     Action::make('api-documentation')
-                        ->label('API Documentation')
+                        ->label('API Reference')
                         ->url(fn (): string => route('scribe'))
                         ->icon('heroicon-o-code-bracket-square'),
                     Action::make('documentation')

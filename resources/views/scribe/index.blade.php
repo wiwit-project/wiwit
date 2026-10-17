@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Wiwit Local API Documentation</title>
+    <title>Wiwit Local API Reference</title>
     <meta charset="utf-8"/>
     <meta
         name="viewport"
