@@ -63,6 +63,8 @@ class CategoryResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('description')
+                    ->wrap()
+                    ->limit(50)
                     ->searchable(),
                 ToggleColumn::make('is_active')
                     ->label('Active')
