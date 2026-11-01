@@ -39,8 +39,7 @@ jobs:
 
             echo "Deploying Wiwit Production"
             cd /opt/stacks/wiwit
-            docker compose pull
-            docker compose up -d
+            docker stack deploy --resolve-image always -c docker-compose.yml wiwit
 
             echo "Deploying Wiwit Demo"
             cd /opt/stacks/demo-wiwit
