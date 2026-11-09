@@ -29,7 +29,7 @@ class TagResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Management';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHashtag;
 
@@ -146,6 +146,7 @@ class TagResource extends Resource
         $backgroundColor = preg_match('/^#[a-fA-F0-9]{6}$/', $color ?? '') === 1 ? $color : '#e5e7eb';
         $linearChannels = array_map(function (int $channel): float {
             $normalizedChannel = $channel / 255;
+
             return $normalizedChannel <= 0.04045 ? $normalizedChannel / 12.92 : (($normalizedChannel + 0.055) / 1.055) ** 2.4;
         }, sscanf($backgroundColor, '#%02x%02x%02x'));
 
