@@ -12,3 +12,11 @@
 .fi-wi-widget > .fi-section {
     @apply h-full;
 }
+
+.tag-name-badge .fi-badge {
+    @apply px-2.5 py-1;
+
+    border-radius: 999px;
+    background-color: var(--tag-background-color);
+    color: var(--tag-text-color);
+}
