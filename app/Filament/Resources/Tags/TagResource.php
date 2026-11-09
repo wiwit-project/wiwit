@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Tags;
 
 use App\Filament\Resources\Tags\Pages\ManageTags;
 use App\Models\Tag;
+use App\Support\TagBadge;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -46,13 +47,13 @@ class TagResource extends Resource
                     ->live(debounce: 300)
                     ->scopedUnique(
                         ignoreRecord: true,
-                        modifyQueryUsing: fn(Builder $query): Builder => $query->where('user_id', auth()->id()),
+                        modifyQueryUsing: fn (Builder $query): Builder => $query->where('user_id', auth()->id()),
                     )
                     ->required(),
                 ColorPicker::make('color')
                     ->hex()
                     ->live(debounce: 250)
-                    ->default(fn(): string => static::generateRandomColor())
+                    ->default(fn (): string => static::generateRandomColor())
                     ->nullable()
                     ->regex('/^#[a-fA-F0-9]{6}$/')
                     ->placeholder('#3b82f6')
@@ -67,10 +68,10 @@ class TagResource extends Resource
                     ),
                 TextEntry::make('preview')
                     ->label('Preview')
-                    ->state(fn(Get $get): string => filled($get('name')) ? $get('name') : 'Tag name')
+                    ->state(fn (Get $get): string => filled($get('name')) ? $get('name') : 'Tag name')
                     ->badge()
                     ->color('gray')
-                    ->extraAttributes(fn(Get $get): array => static::getNameBadgeAttributes($get('color')))
+                    ->extraAttributes(fn (Get $get): array => TagBadge::attributes($get('color')))
                     ->dehydrated(false)
                     ->columnSpanFull(),
                 TextInput::make('description')
@@ -87,7 +88,7 @@ class TagResource extends Resource
                 TextColumn::make('name')
                     ->badge()
                     ->color('gray')
-                    ->extraAttributes(fn(Tag $record): array => static::getNameBadgeAttributes($record->color))
+                    ->extraAttributes(fn (Tag $record): array => TagBadge::attributes($record->color))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
@@ -136,28 +137,5 @@ class TagResource extends Resource
         } while ($color === strtolower($currentColor ?? ''));
 
         return $color;
-    }
-
-    /**
-     * @return array{class: string, style: string}
-     */
-    protected static function getNameBadgeAttributes(?string $color): array
-    {
-        $backgroundColor = preg_match('/^#[a-fA-F0-9]{6}$/', $color ?? '') === 1 ? $color : '#e5e7eb';
-        $linearChannels = array_map(function (int $channel): float {
-            $normalizedChannel = $channel / 255;
-
-            return $normalizedChannel <= 0.04045 ? $normalizedChannel / 12.92 : (($normalizedChannel + 0.055) / 1.055) ** 2.4;
-        }, sscanf($backgroundColor, '#%02x%02x%02x'));
-
-        $luminance = 0.2126 * $linearChannels[0] + 0.7152 * $linearChannels[1] + 0.0722 * $linearChannels[2];
-        $blackContrast = ($luminance + 0.05) / 0.05;
-        $whiteContrast = 1.05 / ($luminance + 0.05);
-        $textColor = $blackContrast >= $whiteContrast ? '#000000' : '#ffffff';
-
-        return [
-            'class' => 'tag-name-badge',
-            'style' => "--tag-background-color: {$backgroundColor}; --tag-text-color: {$textColor};",
-        ];
     }
 }

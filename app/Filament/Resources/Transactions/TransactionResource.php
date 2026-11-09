@@ -4,10 +4,13 @@ namespace App\Filament\Resources\Transactions;
 
 use App\Enums\TransactionType;
 use App\Filament\Imports\TransactionImporter;
+use App\Filament\Resources\Tags\TagResource;
 use App\Filament\Resources\Transactions\Pages\ManageTransactions;
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\Transaction;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -26,10 +29,12 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
@@ -102,6 +107,26 @@ class TransactionResource extends Resource
                 DatePicker::make('transaction_date')
                     ->required()
                     ->default(today()),
+                Select::make('tags')
+                    ->relationship(
+                        'tags',
+                        'name',
+                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                            ->where('user_id', auth()->id())
+                            ->orderBy('name'),
+                    )
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm(fn (Schema $schema): Schema => TagResource::form($schema))
+                    ->createOptionAction(fn (Action $action): Action => $action
+                        ->modalHeading('Create tag')
+                        ->authorize(fn (): bool => TagResource::canCreate()))
+                    ->createOptionUsing(fn (array $data): int => Tag::create([
+                        ...$data,
+                        'user_id' => auth()->id(),
+                    ])->getKey())
+                    ->columnSpan(1),
                 Textarea::make('notes')
                     ->columnSpanFull(),
             ]);
@@ -131,6 +156,9 @@ class TransactionResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->weight(fn (Transaction $record): string => $record->transaction_date->isToday() ? 'bold' : 'normal'),
+                ViewColumn::make('tags')
+                    ->view('filament.tables.columns.transaction-tags')
+                    ->toggleable(),
                 TextColumn::make('notes')
                     ->wrap()
                     ->limit(20)
@@ -202,7 +230,12 @@ class TransactionResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where('user_id', auth()->id());
+            ->where('user_id', auth()->id())
+            ->with([
+                'tags' => fn (BelongsToMany $query): BelongsToMany => $query
+                    ->where('user_id', auth()->id())
+                    ->orderBy('name'),
+            ]);
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
