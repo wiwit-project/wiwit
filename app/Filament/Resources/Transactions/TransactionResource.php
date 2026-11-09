@@ -11,15 +11,14 @@ use App\Models\Tag;
 use App\Models\Transaction;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\ImportAction;
 use Filament\Actions\RestoreAction;
-use Filament\Actions\RestoreBulkAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -34,6 +33,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
@@ -211,9 +211,36 @@ class TransactionResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('assignTags')
+                        ->label('Assign tags')
+                        ->icon(Heroicon::OutlinedHashtag)
+                        ->modalHeading('Assign tags to selected transactions')
+                        ->modalDescription('Existing tags will be kept.')
+                        ->modalSubmitActionLabel('Assign tags')
+                        ->authorizeIndividualRecords(fn (Transaction $record): bool => $record->user_id === auth()->id() && static::canEdit($record))
+                        ->schema([
+                            Select::make('tags')
+                                ->label('Tags')
+                                ->options(fn (): array => Tag::query()
+                                    ->where('user_id', auth()->id())
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id')
+                                    ->all())
+                                ->multiple()
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            foreach ($records as $record) {
+                                $record->tags()->syncWithoutDetaching($data['tags']);
+                            }
+                        })
+                        ->databaseTransaction()
+                        ->successNotificationTitle('Tags assigned')
+                        ->failureNotificationTitle('Tags could not be assigned to some selected transactions')
+                        ->deselectRecordsAfterCompletion(),
                     DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
                 ]),
                 ImportAction::make()
                     ->importer(TransactionImporter::class),
