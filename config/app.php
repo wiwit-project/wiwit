@@ -28,13 +28,13 @@ return [
     |
     */
 
-    'commit_sha' => env('APP_COMMITSHA'),
+    'commit_sha' => env('APP_COMMITSHA', '000000'),
 
-    'ref_name' => env('APP_REFNAME'),
+    'ref_name' => env('APP_REFNAME', 'wiwit'),
 
-    'release_tag' => env('APP_RELEASETAG'),
+    'release_tag' => env('APP_RELEASETAG', 'undetermined'),
 
-    'repository_url' => env('APP_REPOSITORYURL'),
+    'repository_url' => env('APP_REPOSITORYURL', 'https://github.com/wiwit-project/wiwit'),
 
     /*
     |--------------------------------------------------------------------------
