@@ -75,6 +75,19 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      tag_ids:
+        custom: []
+        name: tag_ids
+        description: 'Filter by owned tag IDs. Returns transactions with any of the tags. Must contain at least one ID. Omit to include all transactions.'
+        required: false
+        example:
+          - 1
+          - 2
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
       date_from:
         custom: []
         name: date_from
@@ -102,6 +115,9 @@ endpoints:
       per_page: 20
       type: expense
       category_id: 1
+      tag_ids:
+        - 1
+        - 2
       date_from: '2026-07-01'
       date_to: '2026-07-31'
     bodyParameters: []
@@ -110,11 +126,11 @@ endpoints:
     responses:
       -
         custom: []
-        status: 200
-        content: '{"data":[],"meta":{"page":1,"per_page":20,"total":0,"last_page":1},"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions?type=expense&category_id=1&date_from=2026-07-01&date_to=2026-07-31&per_page=20&page=1","method":"GET"},"first":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions?type=expense&category_id=1&date_from=2026-07-01&date_to=2026-07-31&per_page=20&page=1","method":"GET"},"prev":null,"next":null,"last":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions?type=expense&category_id=1&date_from=2026-07-01&date_to=2026-07-31&per_page=20&page=1","method":"GET"},"create":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"POST"}}}'
+        status: 422
+        content: '{"type":"\/problems\/validation-failed","title":"Validation failed","status":422,"detail":"One or more fields are invalid.","instance":"\/api\/v1\/transactions","errors":{"tag_ids":["The selected tag ids is invalid."]}}'
         headers:
           cache-control: 'no-cache, private'
-          content-type: application/json
+          content-type: application/problem+json
           access-control-allow-origin: '*'
         description: null
     responseFields: []
@@ -197,6 +213,19 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      tag_ids:
+        custom: []
+        name: tag_ids
+        description: 'The IDs of owned tags. Defaults to an empty array.'
+        required: false
+        example:
+          - 1
+          - 2
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
       notes:
         custom: []
         name: notes
@@ -224,6 +253,9 @@ endpoints:
       type: expense
       amount: 12.3
       category_id: 1
+      tag_ids:
+        - 1
+        - 2
       notes: 'Team lunch'
       transaction_date: '2026-07-11'
     fileParameters: []
@@ -231,7 +263,7 @@ endpoints:
       -
         custom: []
         status: 201
-        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"autem","is_active":true},"notes":null,"transaction_date":"2026-10-17","created_at":"2026-10-17T15:45:55.000000Z","updated_at":"2026-10-17T15:45:55.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
+        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"autem","is_active":true},"tags":[{"id":1,"name":"deleniti distinctio","description":null,"color":null}],"notes":null,"transaction_date":"2026-11-07","created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
         headers: []
         description: ''
     responseFields: []
@@ -286,7 +318,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"enim","is_active":true},"notes":null,"transaction_date":"2026-10-17","created_at":"2026-10-17T15:45:55.000000Z","updated_at":"2026-10-17T15:45:55.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
+        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"enim","is_active":true},"tags":[{"id":1,"name":"eum doloremque","description":"Libero aliquam veniam corporis dolorem mollitia deleniti.","color":null}],"notes":null,"transaction_date":"2026-11-07","created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
         headers: []
         description: ''
     responseFields: []
@@ -381,6 +413,19 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      tag_ids:
+        custom: []
+        name: tag_ids
+        description: 'The IDs of owned tags. Replaces existing tags when provided. Use an empty array to remove all tags. Omit to keep existing tags.'
+        required: false
+        example:
+          - 1
+          - 2
+        type: 'integer[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
       notes:
         custom: []
         name: notes
@@ -408,6 +453,9 @@ endpoints:
       type: expense
       amount: 12.3
       category_id: 1
+      tag_ids:
+        - 1
+        - 2
       notes: 'Team lunch'
       transaction_date: '2026-07-11'
     fileParameters: []
@@ -415,7 +463,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"voluptatem","is_active":true},"notes":null,"transaction_date":"2026-10-17","created_at":"2026-10-17T15:45:55.000000Z","updated_at":"2026-10-17T15:45:55.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
+        content: '{"id":1,"title":"Coffee","type":"expense","amount":"113.24","category":{"id":1,"name":"voluptatem","is_active":true},"tags":[{"id":1,"name":"veniam corporis","description":"Deleniti nemo odit quia officia.","color":null}],"notes":null,"transaction_date":"2026-11-07","created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/transactions\/1","method":"DELETE"},"category":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/categories\/1","method":"GET"}}}'
         headers: []
         description: ''
     responseFields: []

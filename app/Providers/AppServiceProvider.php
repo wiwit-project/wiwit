@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\Transaction;
 use App\Models\User;
 use Filament\Support\Facades\FilamentTimezone;
@@ -53,7 +54,12 @@ class AppServiceProvider extends ServiceProvider
                     'description' => 'Everyday expenses',
                     'is_active' => true,
                 ]);
-                Transaction::factory()->expense()->for($user)->for($category)->create();
+                $tag = Tag::factory()->for($user)->create([
+                    'name' => 'Lunch',
+                    'description' => 'Lunch expenses',
+                    'color' => '#3b82f6',
+                ]);
+                Transaction::factory()->expense()->for($user)->for($category)->hasAttached($tag)->create();
             });
         }
     }

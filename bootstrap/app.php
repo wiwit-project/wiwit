@@ -52,11 +52,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 403 => ['/problems/insufficient-ability', 'Insufficient ability', 'The token lacks the ability required for this operation.'],
                 404 => ['/problems/not-found', 'Resource not found', match (true) {
                     $request->is('api/v1/transactions/*') => 'The requested transaction was not found.',
+                    $request->is('api/v1/tags/*') => 'The requested tag was not found.',
                     $request->is('api/v1/categories/*') => 'The requested category was not found.',
                     default => 'The requested resource was not found.',
                 }],
                 405 => ['/problems/method-not-allowed', 'Method not allowed', 'The HTTP method is not supported for this endpoint.'],
-                409 => ['/problems/conflict', 'Conflict', 'The category name conflicts with an existing category.'],
+                409 => ['/problems/conflict', 'Conflict', $request->is('api/v1/tags', 'api/v1/tags/*')
+                    ? 'The tag name conflicts with an existing tag.'
+                    : 'The category name conflicts with an existing category.'],
                 415 => ['/problems/unsupported-media-type', 'Unsupported media type', 'Request bodies must use application/json.'],
                 422 => ['/problems/validation-failed', 'Validation failed', 'One or more fields are invalid.'],
                 429 => ['/problems/too-many-requests', 'Too many requests', 'Too many requests were made. Try again later.'],
