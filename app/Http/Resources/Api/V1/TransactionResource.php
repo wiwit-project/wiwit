@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,6 +40,12 @@ class TransactionResource extends JsonResource
                 'name' => $category->name,
                 'is_active' => $category->is_active,
             ] : null,
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn (Tag $tag): array => [
+                'id' => $tag->getKey(),
+                'name' => $tag->name,
+                'description' => $tag->description,
+                'color' => $tag->color,
+            ])->all()),
             'notes' => $this->notes,
             'transaction_date' => $this->transaction_date->toDateString(),
             'created_at' => $this->created_at->toISOString(),

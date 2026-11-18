@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\InstanceController;
 use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\TransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,12 @@ Route::prefix('v1')->name('api.v1.')->group(function (): void {
         Route::get('/analytics/overview', [AnalyticsController::class, 'overview'])->middleware('abilities:view')->name('analytics.overview');
 
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
+        Route::get('/tags', [TagController::class, 'index'])->middleware('abilities:view')->name('tags.index');
+        Route::post('/tags', [TagController::class, 'store'])->middleware(['abilities:create', 'json.body'])->name('tags.store');
+        Route::get('/tags/{tag}', [TagController::class, 'show'])->middleware('abilities:view')->name('tags.show');
+        Route::patch('/tags/{tag}', [TagController::class, 'update'])->middleware(['abilities:update', 'json.body'])->name('tags.update');
+        Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->middleware('abilities:delete')->name('tags.destroy');
 
         Route::get('/categories', [CategoryController::class, 'index'])->middleware('abilities:view')->name('categories.index');
         Route::post('/categories', [CategoryController::class, 'store'])->middleware(['abilities:create', 'json.body'])->name('categories.store');
