@@ -55,8 +55,8 @@ class AppServiceProvider extends ServiceProvider
                     'is_active' => true,
                 ]);
                 $tag = Tag::factory()->for($user)->create([
-                    'name' => 'Lunch',
-                    'description' => 'Lunch expenses',
+                    'name' => 'Langkawi 2026',
+                    'description' => 'Holiday trip with family to Langkawi',
                     'color' => '#3b82f6',
                 ]);
                 Transaction::factory()->expense()->for($user)->for($category)->hasAttached($tag)->create();

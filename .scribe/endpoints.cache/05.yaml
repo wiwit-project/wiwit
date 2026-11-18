@@ -61,7 +61,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"data":[{"id":1,"name":"Lunch","description":"Lunch expenses","color":"#3b82f6","transactions_count":1,"created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}],"meta":{"page":1,"per_page":20,"total":1,"last_page":1},"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"first":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"prev":null,"next":null,"last":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"create":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"POST"}}}'
+        content: '{"data":[{"id":1,"name":"Langkawi 2026","description":"Holiday trip with family to Langkawi","color":"#3b82f6","transactions_count":1,"created_at":"2026-11-18T06:44:26.000000Z","updated_at":"2026-11-18T06:44:26.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}],"meta":{"page":1,"per_page":20,"total":1,"last_page":1},"links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"first":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"prev":null,"next":null,"last":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags?per_page=20&page=1","method":"GET"},"create":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"POST"}}}'
         headers:
           cache-control: 'no-cache, private'
           content-type: application/json
@@ -143,7 +143,7 @@ endpoints:
       -
         custom: []
         status: 201
-        content: '{"id":1,"name":"aut adipisci","description":"Qui commodi incidunt iure odit.","color":null,"transactions_count":0,"created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
+        content: '{"id":1,"name":"aut adipisci","description":"Qui commodi incidunt iure odit.","color":null,"transactions_count":0,"created_at":"2026-11-18T06:44:26.000000Z","updated_at":"2026-11-18T06:44:26.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
         headers: []
         description: ''
     responseFields: []
@@ -198,7 +198,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id":1,"name":"quidem nostrum","description":null,"color":null,"transactions_count":0,"created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
+        content: '{"id":1,"name":"quidem nostrum","description":null,"color":null,"transactions_count":0,"created_at":"2026-11-18T06:44:26.000000Z","updated_at":"2026-11-18T06:44:26.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
         headers: []
         description: ''
     responseFields: []
@@ -289,7 +289,7 @@ endpoints:
       -
         custom: []
         status: 200
-        content: '{"id":1,"name":"qui commodi","description":"Odit et et modi.","color":null,"transactions_count":0,"created_at":"2026-11-16T23:56:53.000000Z","updated_at":"2026-11-16T23:56:53.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
+        content: '{"id":1,"name":"qui commodi","description":"Odit et et modi.","color":null,"transactions_count":0,"created_at":"2026-11-18T06:44:26.000000Z","updated_at":"2026-11-18T06:44:26.000000Z","links":{"self":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"GET"},"collection":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags","method":"GET"},"update":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"PATCH"},"delete":{"href":"http:\/\/127.0.0.1:8000\/api\/v1\/tags\/1","method":"DELETE"}}}'
         headers: []
         description: ''
     responseFields: []
