@@ -53,14 +53,14 @@ class TransactionController extends Controller
         $paginator = Transaction::query()
             ->where('user_id', $request->user()->getKey())
             ->with($this->relationships($request))
-            ->when(isset($validated['type']), fn ($query) => $query->ofType(TransactionType::from($validated['type'])))
-            ->when(isset($validated['category_id']), fn ($query) => $query->where('category_id', $validated['category_id']))
-            ->when(isset($validated['tag_ids']), fn (Builder $query): Builder => $query->whereHas(
+            ->when(isset($validated['type']), fn($query) => $query->ofType(TransactionType::from($validated['type'])))
+            ->when(isset($validated['category_id']), fn($query) => $query->where('category_id', $validated['category_id']))
+            ->when(isset($validated['tag_ids']), fn(Builder $query): Builder => $query->whereHas(
                 'tags',
-                fn (Builder $tags): Builder => $tags->whereIn('tags.id', $validated['tag_ids']),
+                fn(Builder $tags): Builder => $tags->whereIn('tags.id', $validated['tag_ids']),
             ))
-            ->when(isset($validated['date_from']), fn ($query) => $query->whereDate('transaction_date', '>=', $validated['date_from']))
-            ->when(isset($validated['date_to']), fn ($query) => $query->whereDate('transaction_date', '<=', $validated['date_to']))
+            ->when(isset($validated['date_from']), fn($query) => $query->whereDate('transaction_date', '>=', $validated['date_from']))
+            ->when(isset($validated['date_to']), fn($query) => $query->whereDate('transaction_date', '<=', $validated['date_to']))
             ->orderByDesc('transaction_date')
             ->orderByDesc('id')
             ->paginate($perPage);
@@ -114,7 +114,7 @@ class TransactionController extends Controller
      * @bodyParam type string The transaction type. Enum: income, expense Example: expense
      * @bodyParam amount number The non-negative amount with at most two decimal places. Example: 12.30
      * @bodyParam category_id integer The ID of an owned, active category. Can be null. Example: 1
-     * @bodyParam tag_ids integer[] The IDs of owned tags. Replaces existing tags when provided. Use an empty array to remove all tags. Omit to keep existing tags. Example: [1, 2]
+     * @bodyParam tag_ids integer[] The IDs of owned tags. Replaces existing tags when provided. Use an empty array to remove all tags. Example: [1, 2]
      * @bodyParam notes string Additional notes. Can be null. Example: Team lunch
      * @bodyParam transaction_date string The transaction date in YYYY-MM-DD format. Example: 2026-07-11
      */
@@ -156,7 +156,7 @@ class TransactionController extends Controller
     {
         return [
             'category',
-            'tags' => fn (BelongsToMany $query): BelongsToMany => $query
+            'tags' => fn(BelongsToMany $query): BelongsToMany => $query
                 ->where('tags.user_id', $request->user()->getKey())
                 ->orderBy('name')
                 ->orderBy('tags.id'),
@@ -174,7 +174,7 @@ class TransactionController extends Controller
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
             'type' => [$required, Rule::enum(TransactionType::class)],
             'amount' => [$required, 'numeric', 'min:0', 'decimal:0,2', 'max:9999999999999.99'],
-            'category_id' => ['sometimes', 'nullable', 'integer', Rule::exists('categories', 'id')->where(fn ($query) => $query
+            'category_id' => ['sometimes', 'nullable', 'integer', Rule::exists('categories', 'id')->where(fn($query) => $query
                 ->where('user_id', $request->user()->getKey())
                 ->where('is_active', true)
                 ->whereNull('deleted_at'))],
@@ -187,10 +187,10 @@ class TransactionController extends Controller
 
     private function collectionResponse(Request $request, LengthAwarePaginator $paginator): JsonResponse
     {
-        $link = fn (int $page): array => ['href' => $paginator->url($page), 'method' => 'GET'];
+        $link = fn(int $page): array => ['href' => $paginator->url($page), 'method' => 'GET'];
 
         return response()->json([
-            'data' => collect($paginator->items())->map(fn (Transaction $transaction): array => (new TransactionResource($transaction))->toArray($request))->all(),
+            'data' => collect($paginator->items())->map(fn(Transaction $transaction): array => (new TransactionResource($transaction))->toArray($request))->all(),
             'meta' => [
                 'page' => $paginator->currentPage(),
                 'per_page' => $paginator->perPage(),
