@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Transactions;
 use App\Enums\TransactionType;
 use App\Filament\Imports\TransactionImporter;
 use App\Filament\Resources\Tags\TagResource;
+use App\Filament\Resources\Transactions\Pages\EditTransaction;
 use App\Filament\Resources\Transactions\Pages\ManageTransactions;
 use App\Models\Category;
 use App\Models\Tag;
@@ -254,6 +255,7 @@ class TransactionResource extends Resource
     {
         return [
             'index' => ManageTransactions::route('/'),
+            'edit' => EditTransaction::route('/{record}/edit'),
         ];
     }
 
